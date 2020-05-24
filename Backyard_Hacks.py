@@ -3,12 +3,11 @@
 #       grow your own
 # Made for BackyardHacks 
 
-# 33°27'14.3"N 88°47'27.4"W
-# Enter into Coord
-
 from tkinter import *
 from PIL import ImageTk, Image
 import tkinter.font as font
+import webbrowser as web
+import sys
 
 def main():
     root = Tk()
@@ -19,6 +18,9 @@ def main():
     
     root.mainloop()
 
+def callback(url):
+    web.open_new(url)
+
 # GUI Interface
 class Application(Frame):
 
@@ -27,11 +29,70 @@ class Application(Frame):
         Frame.__init__(self, master)
 
         self.master = master
-        self.plants = {"1": { "name" : "Plant 1" , "desc" : "Desc 1"},
-                       "2": { "name" : "Plant 2" , "desc" : "Desc 2"},
-                       "3": { "name" : "Plant 3" , "desc" : "Desc 3"},
-                       "4": { "name" : "Plant 4" , "desc" : "Desc 4"},
-                       "5": { "name" : "Austin Tree" , "desc" : "This is the description of an Austin Tree"}}
+        self.plants = {"1": { "name" : "Magnolia" , 
+                              "desc" : '''
+                                       \n Kingdom: Plantae
+                                       \n Clade: 	Tracheophytes, Angiosperms, Magnoliids
+                                       \n Order: 	Magnoliales
+                                       \n Family: 	Magnoliaceae
+                                       \n Genus: 	Magnolia 
+                                       \n
+                                       \n Magnolias are spreading, evergreen or deciduous trees or shrubs, 
+                                       \n characterised by large fragrant flowers which may be bowl-shaped 
+                                       \n or star-shaped, in shades of white, pink, purple, green or yellow. 
+                                       \n The blooms often appear before the leaves, in Spring. 
+                                       \n Cone-like fruits are often produced in Autumn
+                                       \n                                                    from Wikipedia
+                                       '''},
+                       "2": { "name" : "Ox-Eye Daisy" , 
+                              "desc" : '''
+                                       \n Kingdom: 	Plantae
+                                       \n Clade: 	Tracheophytes, Angiosperms, Eudicots, Asterids
+                                       \n Order: 	Asterales
+                                       \n Family: 	Asteraceae
+                                       \n Genus: 	Leucanthemum
+                                       \n
+                                       \n Leucanthemum vulgare is a perennial herb that grows to a height of 
+                                       \n 60 cm (20 in) or more and has a creeping underground rhizome. The 
+                                       \n lower parts of the stem are hairy, sometimes densely hairy but more 
+                                       \n or less glabrous in the upper parts. The largest leaves are at the 
+                                       \n base of the plant and are 4–15 cm (1.6–5.9 in) long, about 5 cm (2 in) 
+                                       \n wide and have a petiole. These leaves have up to 15 teeth, or lobes 
+                                       \n or both on the edges. The leaves decrease in size up the stem, the 
+                                       \n upper leaves up to 7.5 cm (3 in) long, lack a petiole and are deeply 
+                                       \n toothed.                                           from Wikipedia
+                                       '''},
+                       "3": { "name" : "Virginia Spring Beauty" , 
+                              "desc" : '''
+                                       \n Kingdom: 	Plantae
+                                       \n Clade: 	Tracheophytes, Angiosperms, Eudicots
+                                       \n Order: 	Caryophyllales
+                                       \n Family: 	Montiaceae
+                                       \n Genus: 	Claytonia
+                                       \n
+                                       \n Springbeauty is a perennial plant, overwintering through a tuberous 
+                                       \n root. It is a trailing plant growing to 5–40 cm (2–16 in) long. 
+                                       \n The leaves are slender lanceolate, 3–14 cm (1 1⁄4–5 1⁄2 in) long 
+                                       \n and 0.5–1.3 cm (0.20–0.51 in) broad, with a 6–20 cm (2 1⁄4–7 3⁄4 in) 
+                                       \n long petiole.
+                                       \n                                                   from Wikipedia
+                                       '''},
+                       "4": { "name" : "Tuberous Vervain" ,
+                              "desc" : '''
+                                       \n Kingdom: 	Plantae
+                                       \n Clade: 	Tracheophytes, Angiosperms, Eudicots, Asterids
+                                       \n Order: 	Lamiales
+                                       \n Family: 	Verbenaceae
+                                       \n Genus: 	Verbena
+                                       \n 
+                                       \n Verbena rigida, known as slender vervain or tuberous vervain, 
+                                       \n is a flowering herbaceous perennial plant. It is native to 
+                                       \n Brazil and Argentina, and is not fully hardy in temperate 
+                                       \n climates, where consequently it is grown from seed as an annual.
+                                       \n                                                   from Wikipedia
+                                       '''},
+                       "5": { "name" : "Austin Tree" , 
+                              "desc" : "This is the description of an Austin Tree. Coming Soon"}}
         
         self.pack()
         self.init_window()
@@ -124,7 +185,7 @@ class Application(Frame):
             # Plant Points
             def set_plant(name, desc):
                 p_name.config(text = name)
-                p_desc.config(text = desc)
+                p_desc.config(text = desc, anchor = 'nw', justify = LEFT)
         
             plant1 = Button(self, text = 1,
                             command = lambda: set_plant(self.plants['1']['name'], 
@@ -222,7 +283,109 @@ class Application(Frame):
             background_set()
             actions()
             set_map()
+
+            chg_lc = Button(self, text = "(change location)",
+                            bg = '#329c4e', fg = 'white',
+                            relief = FLAT)
+            chg_lc.place(x = 630, y = 100)
+
+            lctn_l = Label(self, text = 'Current Location: ',
+                           font = ("Times", 16),
+                           relief = RAISED)
+            lctn_l.place(x = 500, y = 70)
+            c_lctn = Label(self, text = "Censored for Demo",
+                           font = ("Times", 16),
+                           relief = RAISED)
+            c_lctn.place(x = 660, y = 70)
             
+            plnt_l = Label(self,text = 'Selected: ',
+                           font = ("Times", 16),
+                           relief = RAISED)
+            plnt_l.place(x = 500, y = 130)
+            c_plnt = Label(self, text = "Select a Plant",
+                           font = ("Times", 16),
+                           relief = RAISED) 
+            c_plnt.place(x = 600, y = 130)
+            
+            pval_l = Label(self, text = "Growable in your area: ",
+                           font = ("Times", 16),
+                           relief = RAISED)
+            pval_l.place(x = 500, y = 160)
+            pvalid = Label(self, text = "HOPEFULLY :)",
+                           font = ("Times", 16),
+                           relief = RAISED) 
+            pvalid.place(x = 720, y = 160)
+
+            growng = Label(self, 
+                           text = "SELECT PLANT",
+                           relief = GROOVE)
+            growng.place(x = 615, y = 200)
+
+            # Plant Points
+            def set_plant(name, desc):
+                c_plnt.config(text = name)
+                pvalid.config(text = desc)
+
+                if name == 'Magnolia':
+                    growng.config(text = "Learn how to grow this")
+                    growng.bind("<Button-1>", 
+                                lambda e: callback("https://todayshomeowner.com/how-to-grow-magnolias-in-your-yard/"))
+                elif name == 'Ox-Eye Daisy':
+                    growng.config(text = "Learn how to grow this")
+                    growng.bind("<Button-1>", 
+                                lambda e: callback("https://www.americanmeadows.com/wildflower-seeds/daisy-seeds/how-to-grow-daisies"))
+                elif name == 'Virginia Spring Beauty':
+                    growng.config(text = "Learn how to grow this")
+                    growng.bind("<Button-1>", 
+                                lambda e: callback("https://www.friendsofthewildflowergarden.org/pages/plants/springbeauty_virginia.html"))
+                elif name == 'Tuberous Vervain':
+                    growng.config(text = "Learn how to grow this")
+                    growng.bind("<Button-1>", 
+                                lambda e: callback("https://aggie-horticulture.tamu.edu/wildseed/41/41.1.html"))
+                elif name == 'Austin Tree':
+                    growng.config(text = "Sorry... You can't grow this :(")
+                    growng.unbind("<Button-1>")
+    
+            plant1 = Button(self, text = 1,
+                            command = lambda: set_plant(self.plants['1']['name'], 
+                                                        'YES'),
+                            bg = '#9f00da', 
+                            font = font.Font(size = 5),
+                            width = 1)
+            plant1.place(x = 55 , y = 200)
+            
+            plant2 = Button(self, text = 2,
+                            command = lambda: set_plant(self.plants['2']['name'], 
+                                                        'YES'),
+                            bg = '#9f00da', 
+                            font = font.Font(size = 5),
+                            width = 1)
+            plant2.place(x = 80 , y = 600)
+
+            plant3 = Button(self, text = 3,
+                            command = lambda: set_plant(self.plants['3']['name'], 
+                                                        'YES'),
+                            bg = '#9f00da', 
+                            font = font.Font(size = 5),
+                            width = 1)
+            plant3.place(x = 180, y = 300)
+
+            plant4 = Button(self, text = 4,
+                            command = lambda: set_plant(self.plants['4']['name'], 
+                                                        'YES'),
+                            bg = '#9f00da', 
+                            font = font.Font(size = 5),
+                            width = 1)
+            plant4.place(x = 320, y = 120)
+
+            plant5 = Button(self, text = 5,
+                            command = lambda: set_plant(self.plants['5']['name'], 
+                                                        'NO'),
+                            bg = '#9f00da', 
+                            font = font.Font(size = 5),
+                            width = 1)
+            plant5.place(x = 435, y = 420)
+
 #----------------------------------------------------#
 
         # Home Screen
